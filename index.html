@@ -9,6 +9,7 @@
       content="Site officiel de Rachid Haddaoui, artiste marocain, chanteur, compositeur et joueur de oud."
     />
     <title>Rachid Haddaoui — Artiste marocain</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%2314151b'/%3E%3Cpath d='M21 14v36M21 31h19M42 14v36' stroke='%23e1b36f' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -30,22 +31,33 @@
         <a href="#contact" data-i18n="navContact">Contact</a>
       </nav>
 
-      <button class="lang-switch" id="langSwitch" type="button" aria-label="Afficher le site en arabe">
-        <span class="lang-current">FR</span>
-        <span aria-hidden="true">↔</span>
-        <span class="lang-next">ع</span>
-      </button>
+      <div class="header-actions">
+        <button class="edit-button" id="editButton" type="button" data-i18n="editButton">Modifier</button>
+        <button class="lang-switch" id="langSwitch" type="button" aria-label="Afficher le site en arabe">
+          <span class="lang-current">FR</span>
+          <span aria-hidden="true">↔</span>
+          <span class="lang-next">ع</span>
+        </button>
+      </div>
     </header>
 
     <main id="main">
       <section class="hero section" id="accueil">
         <div class="hero-copy reveal">
           <p class="eyebrow" data-i18n="heroEyebrow">RACHID HADDAOUI — ARTISTE MUSICIEN MAROCAIN</p>
-          <h1 data-i18n="heroTitle">Une voix enracinée.<br />Un son sans frontières.</h1>
-          <p class="hero-lead" data-i18n="heroLead">
+          <h1 data-i18n="heroTitle" data-editable="heroTitle">Une voix enracinée.<br />Un son sans frontières.</h1>
+          <p class="hero-lead" data-i18n="heroLead" data-editable="heroLead">
             Chanteur, compositeur et joueur de oud, Rachid Haddaoui fait dialoguer le patrimoine
             beldi du Tafilalet avec les couleurs gnawa, hassanies et contemporaines.
           </p>
+          <div class="hero-socials" aria-label="Plateformes officielles">
+            <a href="https://www.youtube.com/@RachidHaddaoui" target="_blank" rel="noopener noreferrer" aria-label="YouTube officiel"><span class="social-icon youtube-icon" aria-hidden="true">▶</span><span>YouTube</span></a>
+            <a href="https://www.instagram.com/haddaoui_rachid" target="_blank" rel="noopener noreferrer" aria-label="Instagram officiel">
+              <svg class="social-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle class="social-icon-fill" cx="17.4" cy="6.7" r="1"></circle></svg>
+              <span>Instagram</span>
+            </a>
+            <a href="https://www.facebook.com/share/1CndGCk8V2/" target="_blank" rel="noopener noreferrer" aria-label="Facebook officiel"><span class="social-icon facebook-icon" aria-hidden="true">f</span><span>Facebook</span></a>
+          </div>
           <div class="hero-actions">
             <a class="button button-primary" href="#oeuvres">
               <span data-i18n="discover">Découvrir les œuvres</span>
@@ -92,7 +104,6 @@
               alt="Rachid Haddaoui jouant du oud lors d’une performance musicale"
               data-i18n-alt="heroPhotoAlt"
             />
-            <span class="instrument-label" data-i18n="instrumentLabel">EN LIVE · OUD</span>
             <div class="sound-wave" aria-hidden="true">
               <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
             </div>
@@ -107,12 +118,7 @@
               alt="Instrument personnel de Rachid Haddaoui"
               data-i18n-alt="signatureAlt"
             />
-            <figcaption>
-              <span data-i18n="signatureEyebrow">INSTRUMENT</span>
-              <strong data-i18n="signatureName">L’instrument de Rachid</strong>
-            </figcaption>
           </figure>
-          <p class="art-caption" data-i18n="artCaption">L’âme de l’oud.<br />L’élan d’aujourd’hui.</p>
         </div>
       </section>
 
@@ -151,14 +157,14 @@
         <div class="works-grid" id="worksGrid">
           <article class="work-card featured reveal" data-type="release" data-year="2026">
             <div class="work-visual tafilalet-visual">
+              <img class="work-image" src="assets/gallery/portrait-oud.jpg" alt="Rachid Haddaoui avec son oud — projet Tafilalet" loading="lazy" decoding="async" />
               <span class="work-number">01</span>
               <span class="visual-word">تافيلالت</span>
-              <div class="visual-landscape" aria-hidden="true"></div>
             </div>
             <div class="work-info">
               <div class="work-topline"><span>2026</span><span data-i18n="statusReleased">Disponible</span></div>
-              <h3 data-i18n="tafilaletTitle">Tafilalet — تافيلالت</h3>
-              <p data-i18n="tafilaletText">Un hommage à la terre d’origine, à l’oued Ziz, aux oasis et à la mémoire de l’enfance.</p>
+              <h3 data-i18n="tafilaletTitle" data-editable="tafilaletTitle">Tafilalet — تافيلالت</h3>
+              <p data-i18n="tafilaletText" data-editable="tafilaletText">Un hommage à la terre d’origine, à l’oued Ziz, aux oasis et à la mémoire de l’enfance.</p>
               <a
                 class="text-link"
                 href="https://www.youtube.com/results?search_query=Rachid+Haddaoui+Tafilalet"
@@ -170,14 +176,14 @@
 
           <article class="work-card reveal" data-type="heritage" data-year="2026">
             <div class="work-visual rijal-visual">
+              <img class="work-image" src="assets/gallery/rijal-leblad.jpg" alt="Rijal Al Bilad interprété sur scène" loading="lazy" decoding="async" />
               <span class="work-number">02</span>
               <span class="visual-word">رِجال البْلاد</span>
-              <div class="sun-disc" aria-hidden="true"></div>
             </div>
             <div class="work-info">
               <div class="work-topline"><span>2026</span><span data-i18n="statusLive">Projet live</span></div>
-              <h3 data-i18n="rijalTitle">Rijal Al Bilad — رِجال البْلاد</h3>
-              <p data-i18n="rijalText">Le beldi du Tafilalet rencontre l’énergie du rock contemporain et les rythmes gnawa.</p>
+              <h3 data-i18n="rijalTitle" data-editable="rijalTitle">Rijal Al Bilad — رِجال البْلاد</h3>
+              <p data-i18n="rijalText" data-editable="rijalText">Le beldi du Tafilalet rencontre l’énergie du rock contemporain et les rythmes gnawa.</p>
               <a
                 class="text-link"
                 href="https://www.youtube.com/@RachidHaddaoui"
@@ -189,14 +195,14 @@
 
           <article class="work-card reveal" data-type="project" data-year="2026">
             <div class="work-visual qdi-visual">
+              <img class="work-image" src="assets/gallery/live-vocal.jpg" alt="Performance vocale de Rachid Haddaoui" loading="lazy" decoding="async" />
               <span class="work-number">03</span>
               <span class="visual-word">قضي يا المرضي</span>
-              <div class="sound-rings" aria-hidden="true"></div>
             </div>
             <div class="work-info">
               <div class="work-topline"><span>2026</span><span data-i18n="statusDuo">Duo</span></div>
-              <h3 data-i18n="qdiTitle">Qdi Ya L-Mardi — قضي يا المرضي</h3>
-              <p data-i18n="qdiText">Une collaboration vocale avec Khalid El Hamri, portée par une écriture marocaine populaire.</p>
+              <h3 data-i18n="qdiTitle" data-editable="qdiTitle">Qdi Ya L-Mardi — قضي يا المرضي</h3>
+              <p data-i18n="qdiText" data-editable="qdiText">Une collaboration vocale avec Khalid El Hamri, portée par une écriture marocaine populaire.</p>
               <a
                 class="text-link"
                 href="https://www.youtube.com/results?search_query=Rachid+Haddaoui+قضي+يا+المرضي"
@@ -208,14 +214,14 @@
 
           <article class="work-card reveal" data-type="project" data-year="2025">
             <div class="work-visual ana-visual">
+              <img class="work-image" src="assets/gallery/archive-video.jpg" alt="Archive musicale — Ana Mlitt" loading="lazy" decoding="async" />
               <span class="work-number">04</span>
               <span class="visual-word">أنا مليت</span>
-              <div class="path-line" aria-hidden="true"></div>
             </div>
             <div class="work-info">
               <div class="work-topline"><span>2025</span><span data-i18n="statusSong">Projet de chanson</span></div>
-              <h3 data-i18n="anaTitle">Ana Mlitt — أنا مليت</h3>
-              <p data-i18n="anaText">Une chanson portée par une expression directe et sensible, dans un langage musical marocain contemporain.</p>
+              <h3 data-i18n="anaTitle" data-editable="anaTitle">Ana Mlitt — أنا مليت</h3>
+              <p data-i18n="anaText" data-editable="anaText">Une chanson portée par une expression directe et sensible, dans un langage musical marocain contemporain.</p>
               <a
                 class="text-link"
                 href="https://www.youtube.com/@RachidHaddaoui"
@@ -227,14 +233,14 @@
 
           <article class="work-card reveal" data-type="heritage" data-year="2001">
             <div class="work-visual memory-visual">
+              <img class="work-image" src="assets/gallery/archive-tv.jpg" alt="Archive des premières apparitions de Rachid Haddaoui" loading="lazy" decoding="async" />
               <span class="work-number">05</span>
               <span class="visual-word">البداية</span>
-              <div class="archive-lines" aria-hidden="true"></div>
             </div>
             <div class="work-info">
               <div class="work-topline"><span>2001</span><span data-i18n="statusBeginning">Première œuvre engagée</span></div>
-              <h3 data-i18n="firstTitle">Mohamed Jamal Eddoura</h3>
-              <p data-i18n="firstText">Le point de départ public d’un parcours artistique ancré dans les questions humaines et sociales.</p>
+              <h3 data-i18n="firstTitle" data-editable="firstTitle">Mohamed Jamal Eddoura</h3>
+              <p data-i18n="firstText" data-editable="firstText">Le point de départ public d’un parcours artistique ancré dans les questions humaines et sociales.</p>
               <button class="text-link details-button" type="button" data-dialog="journeyDialog">
                 <span data-i18n="readStory">Lire le parcours</span><span aria-hidden="true">＋</span>
               </button>
@@ -320,8 +326,8 @@
         <div class="contact-panel reveal">
           <div class="contact-copy">
             <p class="eyebrow" data-i18n="contactEyebrow">PROGRAMMATION · PRESSE · COLLABORATIONS</p>
-            <h2 data-i18n="contactTitle">Faisons résonner<br />un nouveau projet.</h2>
-            <p data-i18n="contactText">
+            <h2 data-i18n="contactTitle" data-editable="contactTitle">Faisons résonner<br />un nouveau projet.</h2>
+            <p data-i18n="contactText" data-editable="contactText">
               Pour une programmation artistique, une interview ou une collaboration musicale, retrouvez l’artiste sur ses plateformes officielles.
             </p>
             <div class="social-links" aria-label="Plateformes officielles">
@@ -356,6 +362,18 @@
             </div>
           </div>
           <div class="contact-notes">
+            <div class="contact-detail contact-detail-wide">
+              <span data-i18n="emailLabel">E-mail</span>
+              <a href="mailto:rachid.haddaoui.artiste@gmail.com">rachid.haddaoui.artiste@gmail.com</a>
+            </div>
+            <div class="contact-detail">
+              <span data-i18n="phoneLabel">Téléphone</span>
+              <a href="tel:+212662693979">06 62 69 39 79</a>
+            </div>
+            <div class="contact-detail">
+              <span data-i18n="phoneLabel2">Téléphone 2</span>
+              <a href="tel:+212645934065">06 45 93 40 65</a>
+            </div>
             <div>
               <span data-i18n="basedLabel">Basé à</span>
               <strong data-i18n="basedValue">Dakhla, Maroc</strong>
@@ -387,6 +405,8 @@
       </p>
       <div class="dialog-tags"><span>Oud</span><span>Tafilalet</span><span>Fusion</span><span>Chanson engagée</span></div>
     </dialog>
+
+    <div class="edit-status" id="editStatus" role="status" aria-live="polite"></div>
 
     <script src="app.js"></script>
   </body>
