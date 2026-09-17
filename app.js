@@ -1,6 +1,10 @@
 const translations = {
   fr: {
     brandTag: "Artiste · Compositeur",
+    editButton: "Modifier",
+    saveButton: "Enregistrer",
+    editHint: "Touchez un titre ou un texte encadré pour le modifier.",
+    editsSaved: "Modifications enregistrées sur cet appareil.",
     navHome: "Accueil",
     navWorks: "Œuvres",
     navGallery: "Galerie",
@@ -80,6 +84,9 @@ const translations = {
     contactTitle: "Faisons résonner<br />un nouveau projet.",
     contactText: "Pour une programmation artistique, une interview ou une collaboration musicale, retrouvez l’artiste sur ses plateformes officielles.",
     contactButton: "Accéder à la chaîne officielle",
+    emailLabel: "E-mail",
+    phoneLabel: "Téléphone",
+    phoneLabel2: "Téléphone 2",
     basedLabel: "Basé à",
     basedValue: "Dakhla, Maroc",
     languagesLabel: "Langues",
@@ -93,6 +100,10 @@ const translations = {
   },
   ar: {
     brandTag: "فنان · ملحن",
+    editButton: "تعديل",
+    saveButton: "حفظ",
+    editHint: "اضغط على أي عنوان أو نص محدد لتعديله.",
+    editsSaved: "تم حفظ التعديلات على هذا الجهاز.",
     navHome: "الرئيسية",
     navWorks: "الأعمال",
     navGallery: "الصور",
@@ -172,6 +183,9 @@ const translations = {
     contactTitle: "لنُسمِع معاً<br />مشروعاً جديداً.",
     contactText: "للبرمجة الفنية أو المقابلات الصحفية أو التعاون الموسيقي، يمكنكم متابعة الفنان عبر منصاته الرسمية.",
     contactButton: "الذهاب إلى القناة الرسمية",
+    emailLabel: "البريد الإلكتروني",
+    phoneLabel: "الهاتف",
+    phoneLabel2: "الهاتف الثاني",
     basedLabel: "مقيم في",
     basedValue: "الداخلة، المغرب",
     languagesLabel: "اللغات",
@@ -191,10 +205,70 @@ let currentLanguage = localStorage.getItem("rachid-site-language") || "fr";
 
 const root = document.documentElement;
 const langSwitch = document.getElementById("langSwitch");
+const editButton = document.getElementById("editButton");
+const editStatus = document.getElementById("editStatus");
 const yearFilter = document.getElementById("yearFilter");
 const workCards = [...document.querySelectorAll(".work-card")];
 const emptyState = document.getElementById("emptyState");
 const dialog = document.getElementById("journeyDialog");
+const editableElements = [...document.querySelectorAll("[data-editable]")];
+const EDITS_STORAGE_KEY = "rachid-site-edits-v1";
+let isEditing = false;
+
+function getSavedEdits() {
+  try {
+    return JSON.parse(localStorage.getItem(EDITS_STORAGE_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function applySavedEdits(language) {
+  const saved = getSavedEdits()[language] || {};
+  editableElements.forEach((element) => {
+    const key = element.dataset.editable;
+    if (saved[key]) element.innerHTML = saved[key];
+  });
+}
+
+function cleanEditableHtml(element) {
+  const clone = element.cloneNode(true);
+  clone.querySelectorAll("*").forEach((child) => {
+    if (child.tagName === "BR") {
+      [...child.attributes].forEach((attribute) => child.removeAttribute(attribute.name));
+    } else {
+      child.replaceWith(document.createTextNode(child.textContent));
+    }
+  });
+  return clone.innerHTML.trim();
+}
+
+function saveEdits(language) {
+  const saved = getSavedEdits();
+  saved[language] = saved[language] || {};
+  editableElements.forEach((element) => {
+    saved[language][element.dataset.editable] = cleanEditableHtml(element);
+  });
+  localStorage.setItem(EDITS_STORAGE_KEY, JSON.stringify(saved));
+}
+
+function showEditStatus(message) {
+  editStatus.textContent = message;
+  editStatus.classList.add("visible");
+  window.clearTimeout(showEditStatus.timeout);
+  showEditStatus.timeout = window.setTimeout(() => editStatus.classList.remove("visible"), 3200);
+}
+
+function setEditing(enabled) {
+  isEditing = enabled;
+  document.body.classList.toggle("editing", enabled);
+  editableElements.forEach((element) => {
+    element.contentEditable = enabled ? "true" : "false";
+    element.setAttribute("spellcheck", enabled ? "true" : "false");
+  });
+  editButton.textContent = enabled ? translations[currentLanguage].saveButton : translations[currentLanguage].editButton;
+  editButton.setAttribute("aria-pressed", String(enabled));
+}
 
 function applyLanguage(language) {
   const locale = translations[language];
@@ -212,6 +286,9 @@ function applyLanguage(language) {
     const key = element.dataset.i18nAlt;
     if (locale[key]) element.alt = locale[key];
   });
+
+  applySavedEdits(language);
+  editButton.textContent = isEditing ? locale.saveButton : locale.editButton;
 
   langSwitch.querySelector(".lang-current").textContent = language === "ar" ? "ع" : "FR";
   langSwitch.querySelector(".lang-next").textContent = language === "ar" ? "FR" : "ع";
@@ -232,7 +309,24 @@ function updateFilters() {
 }
 
 langSwitch.addEventListener("click", () => {
+  if (isEditing) {
+    saveEdits(currentLanguage);
+    setEditing(false);
+  }
   applyLanguage(currentLanguage === "fr" ? "ar" : "fr");
+});
+
+editButton.addEventListener("click", () => {
+  if (!isEditing) {
+    setEditing(true);
+    showEditStatus(translations[currentLanguage].editHint);
+    editableElements[0]?.focus();
+    return;
+  }
+
+  saveEdits(currentLanguage);
+  setEditing(false);
+  showEditStatus(translations[currentLanguage].editsSaved);
 });
 
 document.querySelectorAll(".filter-chip").forEach((button) => {
