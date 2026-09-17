@@ -1336,3 +1336,162 @@ svg.social-icon {
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* Editorial controls and final portfolio refinements */
+.header-actions {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.edit-button {
+  min-height: 40px;
+  padding: 9px 15px;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  color: var(--ink);
+  background: rgba(255,255,255,.54);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.edit-button[aria-pressed="true"] {
+  color: #fff;
+  border-color: var(--copper-dark);
+  background: var(--copper-dark);
+}
+
+.hero-socials {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+
+.hero-socials a {
+  min-height: 38px;
+  padding: 8px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  background: rgba(255,255,255,.34);
+  font-size: 12px;
+  font-weight: 750;
+  transition: transform 180ms ease, background 180ms ease;
+}
+
+.hero-socials a:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,.72);
+}
+
+.hero-socials svg.social-icon { stroke: var(--ink); }
+
+.signature-instrument img { height: 230px; }
+
+.signature-instrument::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  pointer-events: none;
+  border: 1px solid rgba(126,66,45,.12);
+  border-radius: 20px;
+}
+
+.work-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(10,10,14,.12), rgba(10,10,14,.22) 48%, rgba(10,10,14,.68));
+}
+
+.work-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(.9) contrast(1.04);
+  transition: transform 500ms ease;
+}
+
+.work-card:hover .work-image { transform: scale(1.045); }
+.tafilalet-visual .work-image { object-position: 55% 50%; }
+.qdi-visual .work-image { object-position: 52% 42%; }
+.ana-visual .work-image { object-position: center 38%; }
+
+.contact-panel {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, .55fr);
+}
+
+.contact-detail a {
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: clamp(17px, 1.65vw, 22px);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.contact-detail a:hover { color: var(--gold); }
+
+.editing [data-editable] {
+  outline: 2px dashed var(--copper);
+  outline-offset: 6px;
+  border-radius: 4px;
+  cursor: text;
+}
+
+.editing [data-editable]:focus {
+  outline-style: solid;
+  background: rgba(255,255,255,.1);
+}
+
+.edit-status {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 120;
+  max-width: calc(100% - 32px);
+  padding: 12px 18px;
+  color: #fff;
+  border-radius: 100px;
+  background: rgba(20,21,27,.94);
+  box-shadow: 0 14px 40px rgba(0,0,0,.22);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 18px);
+  transition: opacity 180ms ease, transform 180ms ease;
+  font-size: 13px;
+  text-align: center;
+}
+
+.edit-status.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+@media (max-width: 980px) {
+  .hero-socials { justify-content: center; }
+  .contact-panel { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 720px) {
+  .header-actions { gap: 5px; }
+  .edit-button { min-height: 38px; padding-inline: 12px; }
+  .lang-switch { min-width: 68px; padding-inline: 10px; }
+  .hero-socials a {
+    flex: 1 1 calc(33.333% - 8px);
+    justify-content: center;
+    padding-inline: 8px;
+  }
+  .signature-instrument img { height: 168px; }
+  .contact-detail a { font-size: 17px; }
+}
