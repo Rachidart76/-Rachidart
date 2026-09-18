@@ -1880,7 +1880,8 @@ svg.social-icon {
   text-align: center;
 }
 
-.owner-tools a {
+.owner-tools a,
+.owner-tools button {
   min-height: 44px;
   padding: 10px 13px;
   display: flex;
@@ -1892,8 +1893,21 @@ svg.social-icon {
   font-size: 13px;
   font-weight: 800;
   text-align: center;
+  border: 0;
+  cursor: pointer;
 }
 
-.owner-tools a:hover {
+.owner-tools a:hover,
+.owner-tools button:hover {
   background: var(--gold);
+}
+
+.editing-images main img {
+  outline: 3px dashed var(--gold);
+  outline-offset: -5px;
+  cursor: pointer;
+}
+
+.editing-images main img:hover {
+  filter: brightness(.88) saturate(1.05);
 }

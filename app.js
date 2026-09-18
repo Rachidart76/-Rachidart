@@ -248,6 +248,9 @@ let currentLanguage = localStorage.getItem("rachid-site-language") || "fr";
 const root = document.documentElement;
 const langSwitch = document.getElementById("langSwitch");
 const editButton = document.getElementById("editButton");
+const ownerInlineEdit = document.getElementById("ownerInlineEdit");
+const ownerImageEdit = document.getElementById("ownerImageEdit");
+const editControls = [editButton, ownerInlineEdit].filter(Boolean);
 const editStatus = document.getElementById("editStatus");
 const yearFilter = document.getElementById("yearFilter");
 const workCards = [...document.querySelectorAll(".work-card")];
@@ -255,7 +258,92 @@ const emptyState = document.getElementById("emptyState");
 const dialog = document.getElementById("journeyDialog");
 const editableElements = [...document.querySelectorAll("[data-editable]")];
 const EDITS_STORAGE_KEY = "rachid-site-edits-v1";
+const IMAGES_STORAGE_KEY = "rachid-site-images-v1";
 let isEditing = false;
+let isEditingImages = false;
+
+const editableImages = [...document.querySelectorAll("main img")];
+editableImages.forEach((image, index) => {
+  image.dataset.imageEditKey = image.dataset.imageEditKey || `site-image-${index + 1}`;
+});
+
+function getSavedImages() {
+  try {
+    return JSON.parse(localStorage.getItem(IMAGES_STORAGE_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function applySavedImages() {
+  const saved = getSavedImages();
+  editableImages.forEach((image) => {
+    const replacement = saved[image.dataset.imageEditKey];
+    if (replacement) image.src = replacement;
+  });
+}
+
+function prepareImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      const source = new Image();
+      source.onerror = reject;
+      source.onload = () => {
+        const maxSize = 1600;
+        const scale = Math.min(1, maxSize / Math.max(source.width, source.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.round(source.width * scale);
+        canvas.height = Math.round(source.height * scale);
+        canvas.getContext("2d").drawImage(source, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg", 0.84));
+      };
+      source.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function setImageEditing(enabled) {
+  isEditingImages = enabled;
+  document.body.classList.toggle("editing-images", enabled);
+  if (ownerImageEdit) {
+    ownerImageEdit.textContent = enabled ? "إنهاء · Terminer" : "تعديل الصور · Modifier les images";
+    ownerImageEdit.setAttribute("aria-pressed", String(enabled));
+  }
+}
+
+ownerImageEdit?.addEventListener("click", () => {
+  setImageEditing(!isEditingImages);
+  showEditStatus(isEditingImages ? "اضغط على الصورة التي تريد تغييرها · Cliquez sur une image" : "تم حفظ الصور على هذا الجهاز · Images enregistrées sur cet appareil");
+});
+
+editableImages.forEach((image) => {
+  image.addEventListener("click", () => {
+    if (!isEditingImages) return;
+    const picker = document.createElement("input");
+    picker.type = "file";
+    picker.accept = "image/jpeg,image/png,image/webp";
+    picker.addEventListener("change", async () => {
+      const file = picker.files?.[0];
+      if (!file) return;
+      try {
+        const replacement = await prepareImage(file);
+        image.src = replacement;
+        const saved = getSavedImages();
+        saved[image.dataset.imageEditKey] = replacement;
+        localStorage.setItem(IMAGES_STORAGE_KEY, JSON.stringify(saved));
+        showEditStatus("تم تغيير الصورة · Image remplacée");
+      } catch {
+        showEditStatus("تعذر تغيير الصورة · Impossible de remplacer l’image");
+      }
+    }, { once: true });
+    picker.click();
+  });
+});
+
+applySavedImages();
 
 function getSavedEdits() {
   try {
@@ -303,15 +391,17 @@ function showEditStatus(message) {
 }
 
 function setEditing(enabled) {
-  if (!editButton) return;
+  if (!editControls.length) return;
   isEditing = enabled;
   document.body.classList.toggle("editing", enabled);
   editableElements.forEach((element) => {
     element.contentEditable = enabled ? "true" : "false";
     element.setAttribute("spellcheck", enabled ? "true" : "false");
   });
-  editButton.textContent = enabled ? translations[currentLanguage].saveButton : translations[currentLanguage].editButton;
-  editButton.setAttribute("aria-pressed", String(enabled));
+  editControls.forEach((control) => {
+    control.textContent = enabled ? translations[currentLanguage].saveButton : translations[currentLanguage].editButton;
+    control.setAttribute("aria-pressed", String(enabled));
+  });
 }
 
 function applyLanguage(language) {
@@ -332,9 +422,9 @@ function applyLanguage(language) {
   });
 
   applySavedEdits(language);
-  if (editButton) {
-    editButton.textContent = isEditing ? locale.saveButton : locale.editButton;
-  }
+  editControls.forEach((control) => {
+    control.textContent = isEditing ? locale.saveButton : locale.editButton;
+  });
 
   langSwitch.querySelector(".lang-current").textContent = language === "ar" ? "ع" : "FR";
   langSwitch.querySelector(".lang-next").textContent = language === "ar" ? "FR" : "ع";
@@ -362,8 +452,8 @@ langSwitch.addEventListener("click", () => {
   applyLanguage(currentLanguage === "fr" ? "ar" : "fr");
 });
 
-if (editButton) {
-  editButton.addEventListener("click", () => {
+editControls.forEach((control) => {
+  control.addEventListener("click", () => {
     if (!isEditing) {
       setEditing(true);
       showEditStatus(translations[currentLanguage].editHint);
@@ -375,7 +465,7 @@ if (editButton) {
     setEditing(false);
     showEditStatus(translations[currentLanguage].editsSaved);
   });
-}
+});
 
 document.querySelectorAll(".filter-chip").forEach((button) => {
   button.addEventListener("click", () => {
