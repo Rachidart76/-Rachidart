@@ -263,8 +263,10 @@ let isEditing = false;
 let isEditingImages = false;
 
 const editableImages = [...document.querySelectorAll("main img")];
-editableImages.forEach((image, index) => {
-  image.dataset.imageEditKey = image.dataset.imageEditKey || `site-image-${index + 1}`;
+const editableBackgrounds = [...document.querySelectorAll("[data-editable-background]")];
+const editableVisuals = [...editableImages, ...editableBackgrounds];
+editableVisuals.forEach((visual, index) => {
+  visual.dataset.imageEditKey = visual.dataset.imageEditKey || `site-image-${index + 1}`;
 });
 
 function getSavedImages() {
@@ -277,9 +279,14 @@ function getSavedImages() {
 
 function applySavedImages() {
   const saved = getSavedImages();
-  editableImages.forEach((image) => {
-    const replacement = saved[image.dataset.imageEditKey];
-    if (replacement) image.src = replacement;
+  editableVisuals.forEach((visual) => {
+    const replacement = saved[visual.dataset.imageEditKey];
+    if (!replacement) return;
+    if (visual.tagName === "IMG") {
+      visual.src = replacement;
+    } else {
+      visual.style.setProperty("--featured-bg", `url("${replacement}")`);
+    }
   });
 }
 
@@ -319,9 +326,12 @@ ownerImageEdit?.addEventListener("click", () => {
   showEditStatus(isEditingImages ? "اضغط على الصورة التي تريد تغييرها · Cliquez sur une image" : "تم حفظ الصور على هذا الجهاز · Images enregistrées sur cet appareil");
 });
 
-editableImages.forEach((image) => {
-  image.addEventListener("click", () => {
+editableVisuals.forEach((visual) => {
+  visual.addEventListener("click", (event) => {
     if (!isEditingImages) return;
+    if (visual.hasAttribute("data-editable-background") && event.target !== visual) return;
+    event.preventDefault();
+    event.stopPropagation();
     const picker = document.createElement("input");
     picker.type = "file";
     picker.accept = "image/jpeg,image/png,image/webp";
@@ -330,9 +340,13 @@ editableImages.forEach((image) => {
       if (!file) return;
       try {
         const replacement = await prepareImage(file);
-        image.src = replacement;
+        if (visual.tagName === "IMG") {
+          visual.src = replacement;
+        } else {
+          visual.style.setProperty("--featured-bg", `url("${replacement}")`);
+        }
         const saved = getSavedImages();
-        saved[image.dataset.imageEditKey] = replacement;
+        saved[visual.dataset.imageEditKey] = replacement;
         localStorage.setItem(IMAGES_STORAGE_KEY, JSON.stringify(saved));
         showEditStatus("تم تغيير الصورة · Image remplacée");
       } catch {
