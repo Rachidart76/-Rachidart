@@ -487,3 +487,7 @@ updateAudioButton();
 
 document.getElementById("currentYear").textContent = new Date().getFullYear();
 applyLanguage(currentLanguage);
+
+const ownerTools = document.getElementById("ownerTools");
+const ownerMode = new URLSearchParams(window.location.search).get("admin") === "1";
+if (ownerTools && ownerMode) ownerTools.hidden = false;
