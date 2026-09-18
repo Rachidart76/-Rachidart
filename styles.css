@@ -571,7 +571,7 @@ select {
   border-radius: 30px;
   background:
     linear-gradient(90deg, rgba(10,11,16,.88) 0%, rgba(10,11,16,.67) 48%, rgba(10,11,16,.78) 100%),
-    url("assets/featured-audio-background.jpeg") center 42% / cover no-repeat;
+    var(--featured-bg, url("assets/featured-audio-background.jpeg")) center 42% / cover no-repeat;
   box-shadow: 0 28px 65px rgba(20,21,27,.18);
 }
 
@@ -1902,12 +1902,14 @@ svg.social-icon {
   background: var(--gold);
 }
 
-.editing-images main img {
+.editing-images main img,
+.editing-images [data-editable-background] {
   outline: 3px dashed var(--gold);
   outline-offset: -5px;
   cursor: pointer;
 }
 
-.editing-images main img:hover {
+.editing-images main img:hover,
+.editing-images [data-editable-background]:hover {
   filter: brightness(.88) saturate(1.05);
 }
